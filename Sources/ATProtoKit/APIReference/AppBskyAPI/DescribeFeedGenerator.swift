@@ -27,7 +27,7 @@ extension ATProtoKit {
     /// ``ATAPIError`` and ``ATRequestPrepareError`` for more details.
     public func describeFeedGenerator(pdsURL: String? = nil) async throws -> AppBskyLexicon.Feed.DescribeFeedGeneratorOutput {
         guard let sessionURL = pdsURL != nil ? pdsURL : session?.pdsURL,
-              let requestURL = URL(string: "\(sessionURL)/app.bsky.feed.describeFeedGenerator") else {
+              let requestURL = URL(string: "\(sessionURL)/xrpc/app.bsky.feed.describeFeedGenerator") else {
             throw ATRequestPrepareError.invalidRequestURL
         }
 
