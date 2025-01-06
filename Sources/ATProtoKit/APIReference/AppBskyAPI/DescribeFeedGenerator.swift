@@ -26,6 +26,11 @@ extension ATProtoKit {
     /// - Throws: An ``ATProtoError``-conforming error type, depending on the issue. Go to
     /// ``ATAPIError`` and ``ATRequestPrepareError`` for more details.
     public func describeFeedGenerator(pdsURL: String? = nil) async throws -> AppBskyLexicon.Feed.DescribeFeedGeneratorOutput {
+        guard session != nil,
+              let accessToken = session?.accessToken else {
+            throw ATRequestPrepareError.missingActiveSession
+        }
+        
         guard let sessionURL = pdsURL != nil ? pdsURL : session?.pdsURL,
               let requestURL = URL(string: "\(sessionURL)/xrpc/app.bsky.feed.describeFeedGenerator") else {
             throw ATRequestPrepareError.invalidRequestURL
@@ -37,7 +42,7 @@ extension ATProtoKit {
                 andMethod: .get,
                 acceptValue: nil,
                 contentTypeValue: "application/json",
-                authorizationValue: nil
+                authorizationValue: "Bearer \(accessToken)"
             )
             let response = try await APIClientService.shared.sendRequest(
                 request,
